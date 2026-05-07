@@ -1,38 +1,53 @@
-import React, { useState } from 'react'
-import ProductList from './components/ProductList'
-import DarkModeToggle from './components/DarkModeToggle'
-import Cart from './components/Cart'
+import { useState } from 'react';
+import DarkModeToggle from './components/DarkModeToggle';
+import ProductList, { sampleProducts } from './components/ProductList';
+import Cart from './components/Cart';
+import './App.css';
 
-const App = () => {
-  // TODO: Implement state for dark mode toggle
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // TODO: Implement state for cart management
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
-  // TODO: Implement state for category filtering
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
+  const categories = ['All', ...new Set(sampleProducts.map(p => p.category))];
+  
+  const filteredProducts = selectedCategory === 'All'
+    ? sampleProducts
+    : sampleProducts.filter(product => product.category === selectedCategory);
 
   return (
-    <div>
-      <h1>🛒 Shopping App</h1>
-      <p>
-        Welcome! Your task is to implement filtering, cart management, and dark
-        mode.
-      </p>
-
-      {/* TODO: Render DarkModeToggle and implement dark mode functionality */}
-
-      {/* TODO: Implement category filter dropdown */}
-      <label>Filter by Category: </label>
-      <select>
-        <option value="all">All</option>
-        <option value="Fruits">Fruits</option>
-        <option value="Dairy">Dairy</option>
+    <div className={`app ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <header>
+        <h1>Shopping App</h1>
+        <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />
+      </header>
+      
+      <label htmlFor="category-filter">Filter by Category: </label>
+      <select 
+        id="category-filter"
+        value={selectedCategory} 
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        data-testid="category-filter"
+      >
+        {categories.map(category => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
       </select>
-
-      <ProductList />
-
-      {/* TODO: Implement and render Cart component */}
+      
+      <ProductList products={filteredProducts} onAddToCart={addToCart} />
+      <Cart cart={cart} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
