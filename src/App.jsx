@@ -1,6 +1,8 @@
 // App.jsx - Shopping Cart Application
 import React, { useState } from 'react';
 import './App.css';
+import ProductList from './components/ProductList';
+import Cart from './components/Cart';
 
 const initialProducts = [
   { id: 1, name: 'Apple', category: 'Fruits', price: 1.99 },
@@ -97,70 +99,8 @@ function App() {
         </div>
       )}
 
-      <div data-testid="product-list">
-        <h2>Shopping List</h2>
-        {filteredProducts.length === 0 ? (
-          <p>No products available.</p>
-        ) : (
-          <div className="products-grid">
-            {filteredProducts.map(product => (
-              <div key={product.id} data-testid={`product-${product.id}`}>
-                <h3>{product.name}</h3>
-                <p>Category: {product.category}</p>
-                <p>Price: ${product.price}</p>
-                <button
-                  data-testid={`add-to-cart-${product.id}`}
-                  onClick={() => addToCart(product)}
-                >
-                  Add to Cart
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div data-testid="cart">
-        <h2>Shopping Cart</h2>
-        <div data-testid="cart-items">
-          {cart.length === 0 ? (
-            <p>Your cart is empty.</p>
-          ) : (
-            <>
-              {cart.map(item => (
-                <div key={item.id} data-testid={`cart-item-${item.id}`}>
-                  <span>{item.name}</span>
-                  <span> - ${item.price}</span>
-                  <div>
-                    <button
-                      data-testid={`decrease-qty-${item.id}`}
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    >
-                      -
-                    </button>
-                    <span data-testid={`item-quantity-${item.id}`}>{item.quantity}</span>
-                    <button
-                      data-testid={`increase-qty-${item.id}`}
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                    <button
-                      data-testid={`remove-item-${item.id}`}
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
-              <div data-testid="cart-total">
-                <strong>Total: ${getTotalPrice()}</strong>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+      <ProductList products={filteredProducts} onAddToCart={addToCart} />
+      <Cart cart={cart} />
     </div>
   );
 }
